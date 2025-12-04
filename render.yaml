@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: careerconnect-backend
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        fromDatabase:
+          name: careerconnect-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 10000
+
+databases:
+  - name: careerconnect-db
+    databaseName: careerconnect
+    plan: free
+    region: oregon
