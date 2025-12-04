@@ -10,17 +10,11 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: MONGO_URI
-        fromDatabase:
-          name: careerconnect-db
-          property: connectionString
+      - key: MONGODB_URI
+        value: mongodb+srv://alok_db_user:Alok6807@cluster0.bkv6xsp.mongodb.net/mernapp?retryWrites=true&w=majority&appName=Cluster0
       - key: JWT_SECRET
-        generateValue: true
+        value: mJmQwuFlApsSjRIHAFrM5fvTp3wFQM/H4TggsuYetHI=
       - key: PORT
         value: 10000
-
-databases:
-  - name: careerconnect-db
-    databaseName: careerconnect
-    plan: free
-    region: oregon
+      - key: CORS_ORIGIN
+        value: https://careerconnect-alokrandive18.netlify.app
