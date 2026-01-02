@@ -41,23 +41,28 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
+    console.log('Login request received:', { email: req.body.email });
     const { email, password } = req.body;
 
     if (!email || !password) {
+      console.log('Missing email or password');
       return res.status(400).json({ success: false, error: 'Email and password are required' });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('User not found:', email);
       return res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
 
     const isPasswordValid = await user.matchPassword(password);
     if (!isPasswordValid) {
+      console.log('Invalid password for user:', email);
       return res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
 
     const token = generateToken(user._id, user.userType);
+    console.log('Login successful for user:', email);
 
     res.status(200).json({
       success: true,
@@ -67,6 +72,7 @@ export const login = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 };

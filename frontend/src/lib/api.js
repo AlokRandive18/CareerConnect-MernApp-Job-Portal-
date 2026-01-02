@@ -1,7 +1,11 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: (import.meta.env.VITE_API_BASE_URL) ? import.meta.env.VITE_API_BASE_URL : 'http://localhost:5001/api'
+  baseURL: (import.meta.env.VITE_API_BASE_URL) ? import.meta.env.VITE_API_BASE_URL : 'http://localhost:5001/api',
+  timeout: 10000, // 10 second timeout
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 
 API.interceptors.request.use((config) => {
@@ -11,6 +15,22 @@ API.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Response interceptor for error handling
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('API Error:', {
+      message: error.message,
+      url: error.config?.url,
+      method: error.config?.method,
+      status: error.response?.status,
+      data: error.response?.data,
+      baseURL: error.config?.baseURL
+    });
+    return Promise.reject(error);
+  }
+);
 
 // Auth endpoints
 export const registerUser = (data) => API.post('/auth/register', data);
